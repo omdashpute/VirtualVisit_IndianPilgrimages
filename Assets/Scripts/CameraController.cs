@@ -4,33 +4,58 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    // Sensitivity of mouse
-    private float rotateSpeed = 300.0f;
-
-    //zoom in/out variables
-    private float zoomSpeed = 600.0f;
+    private float rotateSpeed = 10.0f;
+    private float zoomSpeed = 10.0f;
     private float zoomAmount = 0.0f;
+    private TourManager tourManager;
+    private Vector2 lastTouchPosition;
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        tourManager = GetComponent<TourManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (tourManager.isCameraMove)
         {
-            // Rotate camera according to the mouse
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x + Input.GetAxis("Mouse Y") * Time.deltaTime * rotateSpeed, transform.localEulerAngles.y + Input.GetAxis("Mouse X") * Time.deltaTime * rotateSpeed, 0);
-        }
+            if (Input.touchCount == 1)
+            {
+                Touch touch = Input.GetTouch(0);
 
-        if(Input.GetMouseButton(1) || Input.GetMouseButton(2))
-        {
-            //move the camera forward/back
-            zoomAmount = Mathf.Clamp(zoomAmount + Input.GetAxis("Mouse Y") * Time.deltaTime * zoomSpeed, -5.0f, 5.0f);
-            Camera.main.transform.localPosition = new Vector3(0 ,0 ,zoomAmount);
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    // Rotate camera based on touch movement
+                    transform.localEulerAngles = new Vector3(
+                        transform.localEulerAngles.x - touch.deltaPosition.y * Time.deltaTime * rotateSpeed,
+                        transform.localEulerAngles.y + touch.deltaPosition.x * Time.deltaTime * rotateSpeed,
+                        0
+                    );
+                }
+            }
+
+            if (Input.touchCount == 2)
+            {
+                // Zoom based on two-finger pinch gesture
+                Touch touch0 = Input.GetTouch(0);
+                Touch touch1 = Input.GetTouch(1);
+
+                if (touch0.phase == TouchPhase.Moved || touch1.phase == TouchPhase.Moved)
+                {
+                    float prevTouchDeltaMag = (touch0.position - touch0.deltaPosition).magnitude - (touch1.position - touch1.deltaPosition).magnitude;
+                    float touchDeltaMag = (touch0.position - touch1.position).magnitude;
+
+                    zoomAmount = Mathf.Clamp(zoomAmount + (prevTouchDeltaMag - touchDeltaMag) * Time.deltaTime * zoomSpeed, -5.0f, 5.0f);
+                    Camera.main.transform.localPosition = new Vector3(0, 0, zoomAmount);
+                }
+            }
         }
+    }
+
+    public void ResetCamera()
+    {
+        transform.localEulerAngles = new Vector3(0, 0, 0);
+        zoomAmount = 0.0f;
+        Camera.main.transform.localPosition = new Vector3(0, 0, zoomAmount);
     }
 }

@@ -4,57 +4,90 @@ using UnityEngine;
 
 public class TourManager : MonoBehaviour
 {
-    // List of sites
     public GameObject[] objSites;
-
-    // Main menu
     public GameObject canvasMainMenu;
-
-    // Should the camera move
     public bool isCameraMove = false;
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        ReturnToMenu();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (isCameraMove)
+        // Handle back button press on Android
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (isCameraMove)
             {
-                ReturnToMenu();
+                ReturnToMenu(); // Go back to the main menu
+            }
+            else
+            {
+                Application.Quit(); // Exit the app if on the main menu
+            }
+        }
+
+        if (isCameraMove && Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Ended)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 100.0f))
+                {
+                    if (hit.transform.CompareTag("Sound"))
+                    {
+                        MediaAudio mediaAudio = hit.transform.GetComponent<MediaAudio>();
+                        if (mediaAudio != null)
+                        {
+                            mediaAudio.PlayAudio();
+                        }
+                    }
+                    else if (hit.transform.CompareTag("Image"))
+                    {
+                        MediaImage mediaImage = hit.transform.GetComponent<MediaImage>();
+                        if (mediaImage != null)
+                        {
+                            mediaImage.ShowImage();
+                        }
+                    }
+                }
             }
         }
     }
 
     public void LoadSite(int siteNumber)
     {
-        // Show site
         objSites[siteNumber].SetActive(true);
-
-        // Hide menu
         canvasMainMenu.SetActive(false);
-
-        // Enable camera
         isCameraMove = true;
+
+        GetComponent<CameraController>().ResetCamera();
     }
 
     public void ReturnToMenu()
     {
-        // Show menu
         canvasMainMenu.SetActive(true);
 
-        // Hide sites
-        for (int i = 0; i < objSites.Length; i++) 
+        foreach (GameObject site in objSites)
         {
-            objSites[i].SetActive(false);
+            site.SetActive(false);
         }
 
-        // Disable the camera
+        isCameraMove = false;
+    }
+
+    public void ReturnToSite()
+    {
+        isCameraMove = true;
+    }
+
+    public void OpenMedia()
+    {
         isCameraMove = false;
     }
 }
