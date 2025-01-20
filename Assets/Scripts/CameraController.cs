@@ -1,23 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems; // Required for Event Camera
 
 public class CameraController : MonoBehaviour
 {
     private float rotateSpeed = 10.0f;
     private float zoomSpeed = 10.0f;
     private float zoomAmount = 0.0f;
-    private TourManager tourManager;
     private Vector2 lastTouchPosition;
+    private TourManager tourManager;
 
-    public GameObject standardCamera; // Reference to your standard camera
-    public GameObject xrOrigin; // Reference to the XR Origin
+    public GameObject standardCamera; // Standard camera
+    public GameObject xrOrigin; // XR Origin for VR
     public GameObject vrToggleButton; // VR toggle button
     public GameObject reticleCanvas; // Reticle canvas
+    public Canvas worldSpaceCanvas; // Reference to the new World Space Canvas
 
     private bool isVRActive = false;
 
-    // Lock device orientation to landscape left at the start
     void Start()
     {
         Screen.orientation = ScreenOrientation.LandscapeLeft; // Lock to landscape left
@@ -27,6 +28,11 @@ public class CameraController : MonoBehaviour
         standardCamera.SetActive(true); // Use the standard camera by default
         vrToggleButton.SetActive(true); // Ensure the button is always visible
         reticleCanvas.SetActive(false); // Hide the reticle initially
+
+        if (worldSpaceCanvas != null)
+        {
+            worldSpaceCanvas.worldCamera = standardCamera.GetComponent<Camera>(); // Set initial Event Camera
+        }
     }
 
     void Update()
@@ -52,7 +58,6 @@ public class CameraController : MonoBehaviour
 
             if (touch.phase == TouchPhase.Moved)
             {
-                // Rotate camera based on touch movement
                 transform.localEulerAngles = new Vector3(
                     transform.localEulerAngles.x - touch.deltaPosition.y * Time.deltaTime * rotateSpeed,
                     transform.localEulerAngles.y + touch.deltaPosition.x * Time.deltaTime * rotateSpeed,
@@ -63,7 +68,6 @@ public class CameraController : MonoBehaviour
 
         if (Input.touchCount == 2)
         {
-            // Zoom based on two-finger pinch gesture
             Touch touch0 = Input.GetTouch(0);
             Touch touch1 = Input.GetTouch(1);
 
@@ -81,24 +85,12 @@ public class CameraController : MonoBehaviour
 
     private void HandleGyroInput()
     {
-        // Get the gyroscope's rotation rate
         if (SystemInfo.supportsGyroscope)
         {
             Input.gyro.enabled = true;
-
-            // Get the gyroscope's attitude (rotation)
             Quaternion gyroRotation = Input.gyro.attitude;
-
-            // Correct the orientation by rotating 90 degrees on the X-axis
             gyroRotation = Quaternion.Euler(-90, 0, 0) * gyroRotation;
-
-            // Invert the axes if necessary to match the expected movement
             gyroRotation = new Quaternion(-gyroRotation.x, -gyroRotation.y, gyroRotation.z, gyroRotation.w);
-
-            // Apply the rotation to the camera
-            transform.localRotation = gyroRotation;
-
-            // Optional: Adjust the rotation speed if necessary
             transform.localRotation = Quaternion.Slerp(transform.localRotation, gyroRotation, rotateSpeed * Time.deltaTime);
         }
     }
@@ -111,13 +103,23 @@ public class CameraController : MonoBehaviour
         {
             standardCamera.SetActive(false);
             xrOrigin.SetActive(true);
-            reticleCanvas.SetActive(true); // Show the reticle in VR mode
+            reticleCanvas.SetActive(true);
+
+            if (worldSpaceCanvas != null)
+            {
+                worldSpaceCanvas.worldCamera = xrOrigin.GetComponentInChildren<Camera>(); // Switch to VR camera
+            }
         }
         else
         {
             xrOrigin.SetActive(false);
             standardCamera.SetActive(true);
-            reticleCanvas.SetActive(false); // Hide the reticle in standard mode
+            reticleCanvas.SetActive(false);
+
+            if (worldSpaceCanvas != null)
+            {
+                worldSpaceCanvas.worldCamera = standardCamera.GetComponent<Camera>(); // Switch back to normal camera
+            }
         }
     }
 
@@ -125,7 +127,7 @@ public class CameraController : MonoBehaviour
     {
         if (transform != null)
         {
-            transform.localEulerAngles = new Vector3(0, 0, 0);
+            transform.localEulerAngles = Vector3.zero;
         }
         zoomAmount = 0.0f;
 

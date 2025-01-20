@@ -6,7 +6,7 @@ public class TourManager : MonoBehaviour
 {
     public GameObject[] objSites;           // Array of sites
     public GameObject canvasMainMenu;       // Main menu canvas
-    public GameObject vrToggleButton;       // Reference to VR toggle button
+    public GameObject vrToggleButton;    // Reference to VR toggle button
     public bool isCameraMove = false;       // Camera move flag
 
     void Start()
