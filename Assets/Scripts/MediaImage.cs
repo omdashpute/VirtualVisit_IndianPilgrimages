@@ -4,23 +4,34 @@ using UnityEngine;
 
 public class MediaImage : MonoBehaviour
 {
-    public GameObject canvasImage;
-    public TourManager tourManager;
+    private GameObject canvasImage;  // Reference to the description canvas
+    private TourManager tourManager;
 
-    void Start()
+    public void Initialize(GameObject assignedCanvas, TourManager manager)
     {
-        canvasImage.SetActive(false);
+        canvasImage = assignedCanvas;
+        tourManager = manager;
+
+        if (canvasImage != null)
+            canvasImage.SetActive(false);  // Ensure it's hidden initially
+        else
+            Debug.LogWarning("Canvas Image is not assigned!");
     }
 
     public void ShowImage()
     {
-        canvasImage.SetActive(true);
-        tourManager.OpenMedia();
+        if (canvasImage != null)
+        {
+            canvasImage.SetActive(true);
+            //tourManager.OpenMedia();
+        }
     }
 
     public void HideImage()
     {
-        canvasImage.SetActive(false);
+        if (canvasImage != null)
+            canvasImage.SetActive(false);
+
         tourManager.ReturnToSite();
     }
 }

@@ -52,52 +52,52 @@ public class GazeController : MonoBehaviour
     }
 
     private bool ProcessGaze(Camera eyeCamera, Image reticle)
-{
-    Ray ray = new Ray(eyeCamera.transform.position, eyeCamera.transform.forward);
-    RaycastHit hit;
-
-    // 1️⃣ Check for 3D objects using Physics.Raycast
-    if (Physics.Raycast(ray, out hit))
     {
-        GameObject hitObject = hit.collider.gameObject;
+        Ray ray = new Ray(eyeCamera.transform.position, eyeCamera.transform.forward);
+        RaycastHit hit;
 
-        if (hitObject != currentGazeObject)
+        // 1️⃣ Check for 3D objects using Physics.Raycast
+        if (Physics.Raycast(ray, out hit))
         {
-            currentGazeObject = hitObject;
-            gazeTimer = 0.0f;
+            GameObject hitObject = hit.collider.gameObject;
+
+            if (hitObject != currentGazeObject)
+            {
+                currentGazeObject = hitObject;
+                gazeTimer = 0.0f;
+            }
+
+            reticle.fillAmount = gazeTimer / gazeDuration;
+            return hitObject.CompareTag("Interactable");
         }
 
-        reticle.fillAmount = gazeTimer / gazeDuration;
-        return hitObject.CompareTag("Interactable");
-    }
+        // 2️⃣ Check for UI buttons using EventSystem.RaycastAll
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = new Vector2(Screen.width / 2, Screen.height / 2); // Center of screen (gaze position)
 
-    // 2️⃣ Check for UI buttons using EventSystem.RaycastAll
-    PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-    pointerEventData.position = new Vector2(Screen.width / 2, Screen.height / 2); // Center of screen (gaze position)
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, results);
 
-    List<RaycastResult> results = new List<RaycastResult>();
-    EventSystem.current.RaycastAll(pointerEventData, results);
-
-    foreach (RaycastResult result in results)
-    {
-        Button button = result.gameObject.GetComponent<Button>();
-        if (button != null)
+        foreach (RaycastResult result in results)
         {
-            currentGazeObject = result.gameObject;
-            gazeTimer += Time.deltaTime;
-            reticle.fillAmount = gazeTimer / gazeDuration;
-
-            if (gazeTimer >= gazeDuration)
+            Button button = result.gameObject.GetComponent<Button>();
+            if (button != null)
             {
-                button.onClick.Invoke(); // Simulate button click
-                ResetGaze();
-                return true;
+                currentGazeObject = result.gameObject;
+                gazeTimer += Time.deltaTime;
+                reticle.fillAmount = gazeTimer / gazeDuration;
+
+                if (gazeTimer >= gazeDuration)
+                {
+                    button.onClick.Invoke(); // Simulate button click
+                    ResetGaze();
+                    return true;
+                }
             }
         }
-    }
 
-    return false;
-}
+        return false;
+    }
 
     private void ResetGaze()
     {
