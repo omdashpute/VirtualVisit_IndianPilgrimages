@@ -6,7 +6,7 @@ using UnityEngine.EventSystems; // Required for Event Camera
 public class CameraController : MonoBehaviour
 {
     private float rotateSpeed = 10.0f;
-    private float zoomSpeed = 10.0f;
+    private float zoomSpeed = 5.0f; // Adjusted for smoother zoom
     private float zoomAmount = 0.0f;
     private Vector2 lastTouchPosition;
     private TourManager tourManager;
@@ -18,6 +18,8 @@ public class CameraController : MonoBehaviour
     public Canvas worldSpaceCanvas; // Reference to the new World Space Canvas
 
     private bool isVRActive = false;
+    private bool isVRZoomEnabled = false; //  NEW: Toggle for VR Zoom
+    private Transform vrCamera; // VR camera reference
 
     void Start()
     {
@@ -46,6 +48,10 @@ public class CameraController : MonoBehaviour
             else
             {
                 HandleGyroInput(); // Handle gyroscope input if VR is active
+                if (isVRZoomEnabled) //  Zoom only when enabled
+                {
+                    HandleVRZoom();
+                }
             }
         }
     }
@@ -95,6 +101,28 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    private void HandleVRZoom()
+    {
+        if (vrCamera == null) return;
+
+        float headTiltAngle = vrCamera.eulerAngles.x;
+        if (headTiltAngle > 180) headTiltAngle -= 360; // Normalize angle to -180 to 180
+
+        float zoomDirection = 0f;
+
+        if (headTiltAngle > 10f) // Tilt down -> Zoom in
+        {
+            zoomDirection = 1f;
+        }
+        else if (headTiltAngle < -10f) // Tilt up -> Zoom out
+        {
+            zoomDirection = -1f;
+        }
+
+        float zoomChange = zoomDirection * (zoomSpeed * 0.1f) * Time.deltaTime; // Reduced zoom speed
+        xrOrigin.transform.position += vrCamera.forward * zoomChange;
+    }
+
     public void ToggleVR()
     {
         isVRActive = !isVRActive;
@@ -109,6 +137,8 @@ public class CameraController : MonoBehaviour
             {
                 worldSpaceCanvas.worldCamera = xrOrigin.GetComponentInChildren<Camera>(); // Switch to VR camera
             }
+
+            vrCamera = xrOrigin.GetComponentInChildren<Camera>().transform; // Get VR Camera Transform
         }
         else
         {
@@ -135,5 +165,11 @@ public class CameraController : MonoBehaviour
         {
             Camera.main.transform.localPosition = new Vector3(0, 0, zoomAmount);
         }
+    }
+
+    // NEW: Toggle function for enabling/disabling VR zoom
+    public void ToggleVRZoom()
+    {
+        isVRZoomEnabled = !isVRZoomEnabled;
     }
 }
