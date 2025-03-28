@@ -146,4 +146,16 @@ public class TourManager : MonoBehaviour
     {
         isCameraMove = false;
     }*/
+
+    public void BackButton()
+    {
+        if (isCameraMove)
+        {
+            ReturnToMenu();
+        }
+        else
+        {
+            Application.Quit();
+        }
+    }
 }

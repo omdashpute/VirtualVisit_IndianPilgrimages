@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems; // Required for Event Camera
+using UnityEngine.EventSystems;
+using UnityEngine.UI; // Required for Event Camera
 
 public class CameraController : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class CameraController : MonoBehaviour
     private bool isVRActive = false;
     private bool isVRZoomEnabled = false; //  NEW: Toggle for VR Zoom
     private Transform vrCamera; // VR camera reference
+
+    public Image targetImage1;
+    public Image targetImage2;
 
     void Start()
     {
@@ -129,6 +133,7 @@ public class CameraController : MonoBehaviour
 
         if (isVRActive)
         {
+            targetImage2.color = Color.red;
             standardCamera.SetActive(false);
             xrOrigin.SetActive(true);
             reticleCanvas.SetActive(true);
@@ -142,6 +147,7 @@ public class CameraController : MonoBehaviour
         }
         else
         {
+            targetImage2.color = Color.white;
             xrOrigin.SetActive(false);
             standardCamera.SetActive(true);
             reticleCanvas.SetActive(false);
@@ -171,5 +177,10 @@ public class CameraController : MonoBehaviour
     public void ToggleVRZoom()
     {
         isVRZoomEnabled = !isVRZoomEnabled;
+        if (isVRZoomEnabled)
+        {
+            targetImage1.color = Color.red;
+        }
+        else targetImage1.color = Color.white;
     }
 }
