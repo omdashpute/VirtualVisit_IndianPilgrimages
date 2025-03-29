@@ -135,6 +135,7 @@ public class GazeController : MonoBehaviour
         {
             mediaImage.ShowImage();
         }
+
     }
 
 }

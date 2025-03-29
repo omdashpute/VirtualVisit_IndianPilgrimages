@@ -98,15 +98,24 @@ public class TourManager : MonoBehaviour
     public void LoadSubMenu()
     {
         if (canvasSubMenu != null)
+        {
             canvasSubMenu.SetActive(true);
+        }
 
         for (int i = 0; i < objSites.Length; i++)
         {
             objSites[i].SetActive(i == 0);
         }
 
+        // Hide all description canvases
+        foreach (GameObject description in canvasDescriptions)
+        {
+            description.SetActive(false);
+        }
+
         isCameraMove = true;
     }
+
 
     public void LoadSite(int siteNumber)
     {
