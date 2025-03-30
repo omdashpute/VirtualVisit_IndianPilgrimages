@@ -7,7 +7,7 @@ using UnityEngine.UI; // Required for Event Camera
 public class CameraController : MonoBehaviour
 {
     private float rotateSpeed = 10.0f;
-    private float zoomSpeed = 5.0f; // Adjusted for smoother zoom
+    private float zoomSpeed = 2.5f; // Adjusted for smoother zoom
     private float zoomAmount = 0.0f;
     private Vector2 lastTouchPosition;
     private TourManager tourManager;
@@ -83,15 +83,19 @@ public class CameraController : MonoBehaviour
 
             if (touch0.phase == TouchPhase.Moved || touch1.phase == TouchPhase.Moved)
             {
-                float prevTouchDeltaMag = (touch0.position - touch0.deltaPosition).magnitude -
-                                          (touch1.position - touch1.deltaPosition).magnitude;
+                // Swap X and Y to correct orientation issue
+                Vector2 touch0PrevPos = new Vector2(touch0.position.y - touch0.deltaPosition.y, touch0.position.x - touch0.deltaPosition.x);
+                Vector2 touch1PrevPos = new Vector2(touch1.position.y - touch1.deltaPosition.y, touch1.position.x - touch1.deltaPosition.x);
+
+                float prevTouchDeltaMag = (touch0PrevPos - touch1PrevPos).magnitude;
                 float touchDeltaMag = (touch0.position - touch1.position).magnitude;
 
-                zoomAmount = Mathf.Clamp(zoomAmount + (prevTouchDeltaMag - touchDeltaMag) * Time.deltaTime * zoomSpeed, -5.0f, 5.0f);
+                zoomAmount = Mathf.Clamp(zoomAmount + (touchDeltaMag - prevTouchDeltaMag) * Time.deltaTime * zoomSpeed, -5.0f, 5.0f);
                 Camera.main.transform.localPosition = new Vector3(0, 0, zoomAmount);
             }
         }
     }
+
 
     private void HandleGyroInput()
     {
