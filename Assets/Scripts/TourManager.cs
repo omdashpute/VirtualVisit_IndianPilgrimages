@@ -167,4 +167,10 @@ public class TourManager : MonoBehaviour
             Application.Quit();
         }
     }
+
+    public void QuitApp()
+    {
+        Application.Quit(); // Closes the app on a real device
+        Debug.Log("App is closing..."); // Just for debugging in Unity Editor
+    }
 }
