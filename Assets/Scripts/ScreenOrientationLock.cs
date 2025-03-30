@@ -13,7 +13,7 @@ public class ScreenOrientationLock : MonoBehaviour
         // Lock orientation to Portrait
         Screen.orientation = ScreenOrientation.Portrait;
 
-        //Optional: Force update
+        // Force update
         Screen.autorotateToLandscapeLeft = false;
         Screen.autorotateToLandscapeRight = false;
         Screen.autorotateToPortrait = true;
