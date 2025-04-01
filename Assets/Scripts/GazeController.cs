@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TS.GazeInteraction;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems; // Required for button click simulation
+using UnityEngine.EventSystems;
 
 public class GazeController : MonoBehaviour
 {
@@ -19,13 +19,10 @@ public class GazeController : MonoBehaviour
 
     void Start()
     {
-        // Ensure TourManager is correctly assigned
         tourManager = FindObjectOfType<TourManager>();
 
         if (tourManager == null)
-        {
             Debug.LogError("TourManager not found in the scene!");
-        }
     }
 
     void Update()
@@ -36,8 +33,7 @@ public class GazeController : MonoBehaviour
         if (leftHit && rightHit && currentGazeObject != null)
         {
             gazeTimer += Time.deltaTime;
-            leftReticle.fillAmount = gazeTimer / gazeDuration;
-            rightReticle.fillAmount = gazeTimer / gazeDuration;
+            UpdateReticleFill();
 
             if (gazeTimer >= gazeDuration)
             {
@@ -56,7 +52,7 @@ public class GazeController : MonoBehaviour
         Ray ray = new Ray(eyeCamera.transform.position, eyeCamera.transform.forward);
         RaycastHit hit;
 
-        // 1️⃣ Check for 3D objects using Physics.Raycast
+        // Check for 3D interactable objects
         if (Physics.Raycast(ray, out hit))
         {
             GameObject hitObject = hit.collider.gameObject;
@@ -71,9 +67,16 @@ public class GazeController : MonoBehaviour
             return hitObject.CompareTag("Interactable");
         }
 
-        // 2️⃣ Check for UI buttons using EventSystem.RaycastAll
-        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-        pointerEventData.position = new Vector2(Screen.width / 2, Screen.height / 2); // Center of screen (gaze position)
+        // Check for UI buttons
+        return CheckUIInteraction(reticle);
+    }
+
+    private bool CheckUIInteraction(Image reticle)
+    {
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+        {
+            position = new Vector2(Screen.width / 2, Screen.height / 2) // Center of screen
+        };
 
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerEventData, results);
@@ -89,7 +92,7 @@ public class GazeController : MonoBehaviour
 
                 if (gazeTimer >= gazeDuration)
                 {
-                    button.onClick.Invoke(); // Simulate button click
+                    button.onClick.Invoke();
                     ResetGaze();
                     return true;
                 }
@@ -107,35 +110,28 @@ public class GazeController : MonoBehaviour
         currentGazeObject = null;
     }
 
+    private void UpdateReticleFill()
+    {
+        leftReticle.fillAmount = gazeTimer / gazeDuration;
+        rightReticle.fillAmount = gazeTimer / gazeDuration;
+    }
+
     private void TriggerGazeAction(GameObject target)
     {
         Debug.Log($"Gaze activated on {target.name}");
 
-        // Check if the target has a Button component (Unity UI Button)
-        Button button = target.GetComponent<Button>();
-        if (button != null)
+        if (target.TryGetComponent(out Button button))
         {
-            button.onClick.Invoke(); // Simulate button click via gaze
-            return; // Exit to prevent other logic from running
+            button.onClick.Invoke();
+            return;
         }
 
-        // If it's a site, handle site selection
         tourManager.HandleSiteSelection(target);
 
-        // Play audio if present
-        MediaAudio mediaAudio = target.GetComponent<MediaAudio>();
-        if (mediaAudio != null)
-        {
+        if (target.TryGetComponent(out MediaAudio mediaAudio))
             mediaAudio.PlayAudio();
-        }
 
-        // Show image if present
-        MediaImage mediaImage = target.GetComponent<MediaImage>();
-        if (mediaImage != null)
-        {
+        if (target.TryGetComponent(out MediaImage mediaImage))
             mediaImage.ShowImage();
-        }
-
     }
-
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MediaAudio : MonoBehaviour
@@ -13,11 +11,11 @@ public class MediaAudio : MonoBehaviour
 
     public void PlayAudio()
     {
-        audioToPlay.Play();
+        (audioToPlay ??= GetComponent<AudioSource>())?.Play();
     }
 
     public void StopAudio()
     {
-        audioToPlay.Stop();
+        audioToPlay?.Stop();
     }
 }

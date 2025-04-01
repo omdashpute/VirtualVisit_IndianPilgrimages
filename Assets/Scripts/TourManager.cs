@@ -4,26 +4,19 @@ using UnityEngine;
 
 public class TourManager : MonoBehaviour
 {
-    public GameObject[] objSites;          // Array of sites
-    public GameObject[] canvasDescriptions; // Array of description canvases for each site
-    public GameObject canvasSubMenu;       // Sub-menu canvas (3D menu)
-    public GameObject vrToggleButton;      // Reference to VR toggle button
-    public bool isCameraMove = false;      // Camera move flag
+    public GameObject[] objSites;
+    public GameObject[] canvasDescriptions;
+    public GameObject canvasSubMenu;
+    public GameObject vrToggleButton;
+    public bool isCameraMove = false;
 
     void Start()
     {
-        if (vrToggleButton != null)
-            vrToggleButton.SetActive(true);
-        else
-            Debug.LogWarning("VR Toggle Button is not assigned!");
-
+        if (vrToggleButton != null) vrToggleButton.SetActive(true);
+      
         if (canvasSubMenu != null)
         {
             LoadSubMenu();
-        }
-        else
-        {
-            Debug.LogWarning("Sub Menu Canvas is not assigned!");
         }
     }
 
@@ -130,7 +123,7 @@ public class TourManager : MonoBehaviour
 
         GetComponent<CameraController>().ResetCamera();
 
-        // Assign the correct description canvas, skipping the submenu (siteNumber 0)
+        // Skip the submenu (siteNumber 0)
         if (siteNumber > 0 && (siteNumber - 1) < canvasDescriptions.Length)
         {
             MediaImage mediaImage = objSites[siteNumber].GetComponentInChildren<MediaImage>();
@@ -170,7 +163,6 @@ public class TourManager : MonoBehaviour
 
     public void QuitApp()
     {
-        Application.Quit(); // Closes the app on a real device
-        Debug.Log("App is closing..."); // Just for debugging in Unity Editor
+        Application.Quit();
     }
 }
