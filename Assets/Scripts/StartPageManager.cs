@@ -5,12 +5,12 @@ using System.Collections;
 
 public class StartPageManager : MonoBehaviour
 {
-    public GameObject[] pages;
+    public GameObject[] pages; // Drag your 3 pages here
     public Button nextButton;
     public Button prevButton;
     public Button startButton;
-    public CanvasGroup fadePanel;
-    public float fadeDuration = 1.5f;
+    public CanvasGroup fadePanel; // Drag the black panel here
+    public float fadeDuration = 1.5f; // Adjust fade speed
 
     private int currentPage = 0;
 

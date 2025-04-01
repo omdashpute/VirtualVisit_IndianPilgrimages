@@ -6,9 +6,9 @@ using System.Collections;
 public class SplashScreenVideo : MonoBehaviour
 {
     public VideoPlayer videoPlayer;
-    public CanvasGroup fadePanel;
-    public float fadeDuration = 1.5f;
-    public float sceneChangeTime = 5.0f;
+    public CanvasGroup fadePanel; // Drag your black panel here
+    public float fadeDuration = 1.5f; // Adjust fade speed
+    public float sceneChangeTime = 5.0f; // Time before switching scenes
 
     void Start()
     {

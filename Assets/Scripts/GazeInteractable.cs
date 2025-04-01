@@ -6,10 +6,18 @@ public class GazeInteractable : MonoBehaviour
     {
         Debug.Log($"Gaze activated: {name}");
 
-        if (TryGetComponent(out MediaAudio mediaAudio))
+        // Check if this object has MediaAudio
+        MediaAudio mediaAudio = GetComponent<MediaAudio>();
+        if (mediaAudio != null)
+        {
             mediaAudio.PlayAudio();
+        }
 
-        if (TryGetComponent(out MediaImage mediaImage))
+        // Check if this object has MediaImage
+        MediaImage mediaImage = GetComponent<MediaImage>();
+        if (mediaImage != null)
+        {
             mediaImage.ShowImage();
+        }
     }
 }

@@ -3,8 +3,8 @@ using System.Collections;
 
 public class StartPageFadeIn : MonoBehaviour
 {
-    public CanvasGroup fadePanel;
-    public float fadeDuration = 1.5f;
+    public CanvasGroup fadePanel; // Drag the same black panel here
+    public float fadeDuration = 1.5f; // Adjust fade speed
 
     void Start()
     {

@@ -1,8 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MediaImage : MonoBehaviour
 {
-    private GameObject canvasImage;
+    private GameObject canvasImage;  // Reference to the description canvas
     private TourManager tourManager;
 
     public void Initialize(GameObject assignedCanvas, TourManager manager)
@@ -10,21 +12,26 @@ public class MediaImage : MonoBehaviour
         canvasImage = assignedCanvas;
         tourManager = manager;
 
-        if (canvasImage)
-            canvasImage.SetActive(false);
+        if (canvasImage != null)
+            canvasImage.SetActive(false);  // Ensure it's hidden initially
         else
             Debug.LogWarning("Canvas Image is not assigned!");
     }
 
     public void ShowImage()
     {
-        canvasImage?.SetActive(true);
-        // tourManager?.OpenMedia(); // To uncomment if needed...
+        if (canvasImage != null)
+        {
+            canvasImage.SetActive(true);
+            //tourManager.OpenMedia();
+        }
     }
 
     public void HideImage()
     {
-        canvasImage?.SetActive(false);
-        tourManager?.ReturnToSite();
+        if (canvasImage != null)
+            canvasImage.SetActive(false);
+
+        tourManager.ReturnToSite();
     }
 }
