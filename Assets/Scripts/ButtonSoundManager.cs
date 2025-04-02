@@ -3,10 +3,10 @@ using UnityEngine.UI;
 
 public class ButtonSoundManager : MonoBehaviour
 {
-    public static ButtonSoundManager instance; // Singleton pattern
+    public static ButtonSoundManager instance;
     private AudioSource audioSource;
 
-    public AudioClip buttonClickSound; // Drag & drop sound file here in Inspector
+    public AudioClip buttonClickSound;
 
     private void Awake()
     {

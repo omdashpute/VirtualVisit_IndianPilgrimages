@@ -825,18 +825,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 183707010}
-  m_LocalRotation: {x: -0, y: -0.6591396, z: -0, w: 0.7520206}
-  m_LocalPosition: {x: 0, y: 0, z: 2.05}
+  m_LocalRotation: {x: -0, y: -0.9998328, z: -0, w: -0.018286528}
+  m_LocalPosition: {x: 0, y: 0, z: -6.83}
   m_LocalScale: {x: 0.008, y: 0.00982, z: 0.008}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 717612674}
   - {fileID: 2121711845}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -82.469, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -182.096, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -6.38, y: 1.5678}
+  m_AnchoredPosition: {x: 0.22, y: 1.5678}
   m_SizeDelta: {x: 1080, y: 498.46152}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &190009187
@@ -6107,7 +6107,7 @@ RectTransform:
   m_GameObject: {fileID: 1161173670}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1137319005}
@@ -6130,16 +6130,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 1, a: 0.6666667}
+  m_Color: {r: 0, g: 1, b: 0.88181186, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 857a635729a4efb43bba0801e14269c0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 929666de204c6474f962d247847b79dd, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -8468,7 +8468,7 @@ RectTransform:
   m_GameObject: {fileID: 1556079861}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1137319005}
@@ -8491,16 +8491,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 1, a: 0.6666667}
+  m_Color: {r: 0, g: 1, b: 0.88181186, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 857a635729a4efb43bba0801e14269c0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 929666de204c6474f962d247847b79dd, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -10566,6 +10566,7 @@ GameObject:
   - component: {fileID: 1985270578}
   - component: {fileID: 1985270579}
   - component: {fileID: 1985270580}
+  - component: {fileID: 1985270581}
   m_Layer: 0
   m_Name: WorldCentre
   m_TagString: Untagged
@@ -10641,6 +10642,18 @@ MonoBehaviour:
   canvasSubMenu: {fileID: 297307377}
   vrToggleButton: {fileID: 530737004}
   isCameraMove: 0
+--- !u!114 &1985270581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985270577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49dd06319d2babc4db593d1fa44bcb75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2010114881
 GameObject:
   m_ObjectHideFlags: 0
